@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8">
+<html lang="ar" dir="rtl"><head><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src data: https:; connect-src https://script.google.com https://*.googleusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'"><meta name="referrer" content="no-referrer"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>derma focus</title>
 <meta name="description" content="derma focus — dermatology and aesthetic medicine magazine. Demo of a multilingual dermatology and aesthetic medicine publication (fictional content).">
@@ -221,6 +221,21 @@ h1{font-size:26px;line-height:1.5}
 #dmore{width:100%}
 }
 .soc a.si{display:inline-grid;place-items:center;color:inherit;text-decoration:none}
+
+/* ===== v3: full-width banner, no frame, no sideways scroll ===== */
+main:focus,main:focus-visible,#app:focus,#app:focus-visible{outline:none!important}
+html{overflow-x:hidden;overscroll-behavior:none}
+html,body{max-width:100%;touch-action:pan-y pinch-zoom}
+@supports(overflow:clip){body{overflow-x:clip}}
+main#app:has(>.sl){padding-top:0}
+.sl{width:var(--vw,100vw);max-width:none;margin-inline:calc(50% - var(--vw,100vw)/2);margin-bottom:8px}
+.sl .slide{border-radius:0;min-height:clamp(480px,80vh,760px);padding-inline:max(0px,calc((var(--vw,100vw) - 1280px)/2))}
+.sl .ctl{padding-inline:max(24px,calc((var(--vw,100vw) - 1280px)/2 + 24px))}
+@media(max-width:700px){
+.sec .g3,.sec .ag{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;overflow:visible;scroll-snap-type:none;margin-inline:0;padding:0}
+.sec .g3>*,.sec .ag>*{flex:none;min-width:0;scroll-snap-align:none}
+.sec .g3.wd{grid-template-columns:1fr}
+}
 </style></head><body>
 <a class="skip" id="sk" href="#app"></a>
 <header><div class="w"><div class="bar">
@@ -233,7 +248,7 @@ h1{font-size:26px;line-height:1.5}
 <main id="app" class="w" tabindex="-1"></main>
 <footer id="fo"></footer>
 <div class="tabbar" id="tab" role="navigation"></div>
-<script>window.DFS={sl:function(){return[]},au:function(a){return D[a[2]][1][lang]},sb:function(){return''},src:function(){return t("src")},socl:function(s){return s},soc:function(x){return '<li><span class="si" role="img" aria-label="'+x[0]+' ('+t("demo")+')" title="'+x[0]+' ('+t("demo")+')">'+svg(x[1])+'</span></li>'}};</script>
+<script>(function(){function f(){document.documentElement.style.setProperty('--vw',document.documentElement.clientWidth+'px')}f();addEventListener('resize',f);addEventListener('orientationchange',f)})();window.DFS={sl:function(){return[]},au:function(a){return D[a[2]][1][lang]},sb:function(){return''},src:function(){return t("src")},socl:function(s){return s},soc:function(x){return '<li><span class="si" role="img" aria-label="'+x[0]+' ('+t("demo")+')" title="'+x[0]+' ('+t("demo")+')">'+svg(x[1])+'</span></li>'}};</script>
 <script>
 var LN=["ar","fr","de","en"],NM=["العربية","FR","DE","EN"],ORD=[0,3,1,2],lang=0,$=function(s){return document.querySelector(s)};
 var T={
@@ -452,10 +467,18 @@ addEventListener("hashchange",go);chrome();go();
 if(typeof D==='undefined')return;
 var K='dfocus_admin_v2',S=null;
 function H(s){var a=0xdeadbeef,b=0x41c6ce57,c;for(var i=0;i<s.length;i++){c=s.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}a=Math.imul(a^a>>>16,2246822507)^Math.imul(b^b>>>13,3266489909);b=Math.imul(b^b>>>16,2246822507)^Math.imul(a^a>>>13,3266489909);return(4294967296*(2097151&b)+(a>>>0)).toString(36)}
-try{S=JSON.parse(localStorage.getItem(K))}catch(e){}
-if(!S)try{S=JSON.parse(document.getElementById('site-data').textContent)}catch(e){}
+var isA=!!document.getElementById('adm-js'),PK='dfocus_pub_v1',E0=null,C0=null;
+try{E0=JSON.parse(document.getElementById('site-data').textContent)}catch(e){}
+try{C0=JSON.parse(localStorage.getItem(isA?K:PK))}catch(e){}
+S=isA?(C0||E0):((C0&&(C0.ver||0)>=((E0&&E0.ver)||0))?C0:E0);
 S=S||{};['tx','ov','im','so','src','sub','au'].forEach(function(k){S[k]=S[k]||{}});['sl','sx','bl','pt','ho'].forEach(function(k){S[k]=S[k]||[]});
-S.hh=S.hh||{};S.gs=S.gs||{url:'',key:''};S.add=S.add||{};['d','n','a','c','sp'].forEach(function(k){S.add[k]=S.add[k]||[]});S.pw=S.pw||H('admin123');
+S.hh=S.hh||{};S.gs=S.gs||{url:'',key:''};S.add=S.add||{};['d','n','a','c','sp'].forEach(function(k){S.add[k]=S.add[k]||[]});delete S.pw;delete S.gs.key;
+function cl(x){if(typeof x=='string')return x.replace(/[<>]/g,'').replace(/"/g,'&quot;');if(Array.isArray(x))return x.map(cl);if(x&&typeof x=='object'){var o={};for(var k in x)o[k]=cl(x[k]);return o}return x}
+function iu(v){return/^(https?:\/\/[^\s'"<>]+|data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+\/=]+)$/.test(v)}
+function lk(u){return/^(#|\/|https?:\/\/|mailto:)/i.test(u||'')?u:'#/'}
+if(!isA){S=cl(S);delete S.pw}
+Object.keys(S.im).forEach(function(k){if(!iu(S.im[k]))delete S.im[k]});
+S.sl.forEach(function(x){if(x.im&&!iu(x.im)&&!/^ph:\d$/.test(x.im))x.im=''});S.bl.forEach(function(b){if(b.img&&!iu(b.img))b.img='';(b.cs||[]).forEach(function(q){if(q.img&&!iu(q.img))q.img=''})});
 var BASE={d:D.length,n:N.length,a:A.length,c:CL.length,sp:SP.length},OP=AP.slice();
 AP.length=0;A.forEach(function(a,i){AP.push(1000+i)});
 ['wT','about','editorial','disclaimer','ads','dT','nT','aT','iT','eT','cT','crT','submit','pT','contact','privacy','terms','unsub','drT'].forEach(function(k){if(!T['l_'+k]&&T[k])T['l_'+k]=JSON.parse(JSON.stringify(T[k]))});
@@ -480,11 +503,11 @@ logo=function(c,i){var u=S.im['c:'+c[3]];return u?'<img class="lgo" alt="" src="
 var UR={Instagram:'https://instagram.com/',TikTok:'https://tiktok.com/@',X:'https://x.com/',Facebook:'https://facebook.com/'},LK='<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>';
 function url(n,v){v=(v||'').trim();if(!v)return'';if(/^(https?:|mailto:)/i.test(v))return v;if(n=='Email'||/^\S+@\S+\.\S+$/.test(v))return'mailto:'+v;return UR[n]?UR[n]+v.replace(/^@/,''):'https://'+v}
 function bh2(b){var ti=tt(b.ti),bo=tt(b.bo);
-if(b.t=='banner')return'<div class="cta2" style="margin-top:48px"><p class="lead" style="margin:0">'+esc(ti)+(bo?'<br><span class="mu">'+esc(bo)+'</span>':'')+'</p>'+(b.lk?'<a class="btn" href="'+esc(b.lk)+'">'+esc(tt(b.lt)||'→')+'</a>':'')+'</div>';
-if(b.t=='sec'){var im2=b.img?'<img class="im" alt="'+esc(ti)+'" src="'+b.img+'" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:20px">':'',tx='<div><h2>'+esc(ti)+'</h2><p class="lead">'+esc(bo)+'</p>'+(tt(b.lt)&&b.lk?'<p style="margin-top:18px"><a class="btn" href="'+esc(b.lk)+'">'+esc(tt(b.lt))+'</a></p>':'')+'</div>';return'<section class="sec"><div class="g g2" style="align-items:center;margin-top:0">'+(b.side=='end'?tx+'<div>'+im2+'</div>':'<div>'+im2+'</div>'+tx)+'</div></section>'}
+if(b.t=='banner')return'<div class="cta2" style="margin-top:48px"><p class="lead" style="margin:0">'+esc(ti)+(bo?'<br><span class="mu">'+esc(bo)+'</span>':'')+'</p>'+(b.lk?'<a class="btn" href="'+esc(lk(b.lk))+'">'+esc(tt(b.lt)||'→')+'</a>':'')+'</div>';
+if(b.t=='sec'){var im2=b.img?'<img class="im" alt="'+esc(ti)+'" src="'+b.img+'" style="width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:20px">':'',tx='<div><h2>'+esc(ti)+'</h2><p class="lead">'+esc(bo)+'</p>'+(tt(b.lt)&&b.lk?'<p style="margin-top:18px"><a class="btn" href="'+esc(lk(b.lk))+'">'+esc(tt(b.lt))+'</a></p>':'')+'</div>';return'<section class="sec"><div class="g g2" style="align-items:center;margin-top:0">'+(b.side=='end'?tx+'<div>'+im2+'</div>':'<div>'+im2+'</div>'+tx)+'</div></section>'}
 var h='<section class="sec"><h2>'+esc(ti)+'</h2>'+(bo?'<p class="lead">'+esc(bo)+'</p>':'');
 if(b.t=='image'&&b.img)h+='<img class="im" style="margin-top:24px;max-height:480px;object-fit:cover" alt="'+esc(ti)+'" src="'+b.img+'">';
-if(b.t=='cards')h+='<div class="g g3 wd">'+(b.cs||[]).map(function(c){return'<a class="wc" href="'+esc(c.lk||'#/')+'">'+(c.img?'<img class="im" style="aspect-ratio:3/2;object-fit:cover;margin-bottom:14px" alt="" src="'+c.img+'">':'')+'<h3>'+esc(tt(c.ti))+'</h3><p class="mu">'+esc(tt(c.bo))+'</p></a>'}).join('')+'</div>';
+if(b.t=='cards')h+='<div class="g g3 wd">'+(b.cs||[]).map(function(c){return'<a class="wc" href="'+esc(lk(c.lk))+'">'+(c.img?'<img class="im" style="aspect-ratio:3/2;object-fit:cover;margin-bottom:14px" alt="" src="'+c.img+'">':'')+'<h3>'+esc(tt(c.ti))+'</h3><p class="mu">'+esc(tt(c.bo))+'</p></a>'}).join('')+'</div>';
 return h+'</section>'}
 function blocks(p,pos){return S.bl.filter(function(b){return b.pg==p&&b.pos==pos}).map(bh2).join('')}
 Object.keys(PGN).forEach(function(p){var o=R[p];if(p=='home')return;if(o)R[p]=function(){return blocks(p,'top')+o.apply(this,arguments)+blocks(p,'bottom')}});
@@ -509,7 +532,7 @@ function slider(){var ds=S.sl;
 return'<h1 class="vh">'+t('brand')+' — '+t('tag')+'</h1><div class="sl" id="sl" role="region" aria-roledescription="carousel" aria-label="'+t('sld')+'"><div id="sls" aria-live="off">'+ds.map(function(x,i){var im=x.im&&(x.im.indexOf('ph:')==0?PH[+x.im.slice(3)].u:x.im),bt=tt(x.bt),lk='#'+String(x.bl||'/').replace(/^#/,''),
 c='<div class="sc"><span class="sk">'+esc(tt(x.k))+'</span><h2>'+esc(tt(x.h))+'</h2><p>'+esc(tt(x.x))+'</p>'+(bt?'<div class="acts"><a class="btn" href="'+esc(lk)+'">'+esc(bt)+'</a></div>':'')+'</div>';
 return'<article class="slide'+(im?'':' wel')+(i?'':' on')+'" role="group" aria-roledescription="slide" aria-label="'+(i+1)+' / '+ds.length+'">'+(im?'<img class="im" alt="" src="'+im+'">'+c:'<div class="orbs" aria-hidden="true"><i></i><i></i><i></i></div><div class="wi2">'+c+'</div>')+'</article>'}).join('')+'</div><div class="ctl"><button class="tb fp" type="button" data-a="p" aria-label="'+t('prv')+'">'+svg('<path d="m15 6-6 6 6 6"/>')+'</button><button class="tb" type="button" data-a="t" id="spl" aria-label="'+t('pau')+'">'+svg(PA)+'</button><span class="dots">'+ds.map(function(x,i){return'<button class="sdot" type="button" data-a="'+i+'" aria-label="'+(i+1)+' / '+ds.length+'"'+(i?'':' aria-current="true"')+'></button>'}).join('')+'</span><button class="tb fp" type="button" data-a="n" aria-label="'+t('nxt')+'">'+svg('<path d="m9 6 6 6-6 6"/>')+'</button></div></div>'}
-window.DFS={S:S,K:K,H:H,BASE:BASE,PGN:PGN,esc:esc,setO:setO,url:url,LK:LK,
+window.DFS={S:S,K:K,H:H,cl:cl,isA:isA,BASE:BASE,PGN:PGN,esc:esc,setO:setO,url:url,LK:LK,
 sl:function(){return S.sl},slider:slider,ho:ho,
 au:function(a){var x=S.au[a[0]];return x&&(x[lang]||x[0])||D[a[2]][1][lang]},
 sb:function(x){var v=tt(S.sub[x[0]]);return v?'<p class="lead" style="margin:6px 0 14px">'+esc(v)+'</p>':''},
@@ -517,155 +540,8 @@ src:function(x){var v=tt(S.src[x[0]]);return v?['المصدر: ','Source : ','Qu
 socl:function(s){return s.concat(S.sx.map(function(x){return[x.n||'Link',LK,x.u]}))},
 soc:function(x){var u=url(x[0],x[2]||S.so[x[0]]);return u?'<li><a class="si" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer" aria-label="'+esc(x[0])+'">'+svg(x[1])+'</a></li>':'<li><span class="si" role="img" aria-label="'+esc(x[0])+'" title="'+esc(x[0])+'">'+svg(x[1])+'</span></li>'}};
 chrome();go();
+if(!isA&&S.gs.url)try{fetch(S.gs.url+'?action=content',{credentials:'omit'}).then(function(r){return r.json()}).then(function(j){if(j&&j.ok&&j.ver&&j.content&&j.ver!=(S.ver||0)&&!sessionStorage.getItem('rl'+j.ver)){var q=JSON.parse(j.content);q.ver=j.ver;q.gs={url:S.gs.url};sessionStorage.setItem('rl'+j.ver,'1');localStorage.setItem(PK,JSON.stringify(q));location.reload()}}).catch(function(){})}catch(e){}
 })();
 </script>
-<script id="adm-js">
-(function(){
-var F=window.DFS;if(!F||!F.S)return;
-var S=F.S,esc=F.esc,PGN=F.PGN,LB=['العربية','Français','Deutsch','English'],ui={p:'home',l:0,q:'',open:'',ok:sessionStorage.getItem('dfa')=='1'},tm;
-var NAVS=[['home','الصفحة الرئيسية'],['news','الأخبار الطبية'],['art','المقالات'],['doc','الأطباء'],['cli','المراكز الطبية'],['req','طلبات التسجيل'],['imp','استيراد من Google Sheet'],['soc','التواصل الاجتماعي'],['foot','الفوتر'],['gs','ربط Google Sheet'],['bl','عناصر إضافية'],['tx','كل النصوص'],['st','الإعدادات']];
-var L4=function(x){return[x||'','','','']};
-var el=document.createElement('div');el.id='adm';el.dir='rtl';document.body.appendChild(el);
-var st=document.createElement('style');st.textContent='#adm{display:none;position:fixed;inset:0;z-index:300;background:#f4f7fa;color:#0f2a44;font:400 15px/1.7 Almarai,system-ui,sans-serif}#adm *{box-sizing:border-box}#adm .wrap{display:flex;height:100%}#adm .sd{width:250px;flex:none;background:#0F2A44;color:#fff;padding:18px 12px;overflow:auto;display:flex;flex-direction:column;gap:4px}#adm .sd .lg{font-weight:800;font-size:18px;padding:6px 12px 16px}#adm .sd button{all:unset;cursor:pointer;padding:10px 14px;border-radius:12px;color:#cfe0f0;font-size:15px}#adm .sd button:hover{background:rgba(255,255,255,.08)}#adm .sd button.on{background:#fff;color:#0F2A44;font-weight:700}#adm .mn{flex:1;overflow:auto;min-width:0}#adm .top{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 24px;background:#fff;border-bottom:1px solid #dbe4ec}#adm .top h1{margin:0;font-size:20px;margin-inline-end:auto}#adm .ab{max-width:880px;margin:0 auto;padding:20px 24px 80px}#adm button,#adm select,#adm .btn{font:inherit;min-height:40px;padding:0 14px;border-radius:12px;border:1px solid #cbd7e2;background:#fff;color:#0F2A44;cursor:pointer;display:inline-flex;align-items:center;gap:6px}#adm .pri{background:#1D5A8E;color:#fff;border-color:#1D5A8E}#adm .sm{min-height:34px;font-size:13px;padding:0 12px}#adm .dg{color:#b3261e;border-color:#e3b3b0}#adm .it{background:#fff;border:1px solid #dbe4ec;border-radius:16px;margin:10px 0}#adm summary{cursor:pointer;padding:14px 16px;font-weight:700;list-style:none;display:flex;gap:10px;align-items:center}#adm summary::after{content:"▾";margin-inline-start:auto;color:#6b7f92}#adm .ib{padding:4px 16px 16px;display:grid;gap:6px;border-top:1px solid #eef2f6}#adm .box{background:#fff;border:1px solid #dbe4ec;border-radius:16px;padding:16px;margin:12px 0;display:grid;gap:6px}#adm h2{font-size:17px;margin:22px 0 6px}#adm label{font-size:13px;color:#5a6f83;font-weight:700;margin-top:6px}#adm input:not([type=file]),#adm textarea,#adm .aq{width:100%;min-height:42px;padding:8px 12px;border:1px solid #cbd7e2;border-radius:12px;background:#fff;color:#0F2A44;font:inherit}#adm textarea{min-height:110px}#adm .ph{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:4px 0}#adm .ph img{width:96px;height:64px;object-fit:cover;border-radius:10px;border:1px solid #dbe4ec}#adm .ph span{width:96px;height:64px;display:grid;place-items:center;background:#eef2f6;border-radius:10px;font-size:12px;color:#6b7f92}#adm .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}#adm .mu{color:#6b7f92;font-size:13px;margin:0}#adm .al{max-width:360px;margin:14vh auto;padding:24px;display:grid;gap:12px;background:#fff;border:1px solid #dbe4ec;border-radius:20px}.si{display:inline-grid;place-items:center;color:inherit}@media(max-width:800px){#adm .wrap{flex-direction:column}#adm .sd{width:100%;flex-direction:row;overflow-x:auto;padding:8px;gap:4px}#adm .sd .lg{display:none}#adm .sd button{white-space:nowrap;padding:8px 12px}#adm .ab{padding:14px 12px 80px}#adm .top{padding:10px 12px}}';document.head.appendChild(st);
-function fld(s,k,v,lb,ph,big){v=v==null?'':v;var tx=big||String(v).length>70;return(lb?'<label>'+lb+'</label>':'')+(tx?'<textarea':'<input')+' data-s="'+s+'" data-k="'+esc(k)+'" placeholder="'+esc(ph||'')+'"'+(tx?'>'+esc(v)+'</textarea>':' value="'+esc(v)+'">')}
-function sel(s,k,list,v,lb){return(lb?'<label>'+lb+'</label>':'')+'<select data-s="'+s+'" data-k="'+esc(k)+'">'+list.map(function(x){return'<option value="'+x[0]+'"'+(String(x[0])==String(v)?' selected':'')+'>'+esc(x[1])+'</option>'}).join('')+'</select>'}
-function prev(u){return u&&(u.indexOf('ph:')==0?PH[+u.slice(3)].u:u)}
-function imgc(key,cur,lb){var u=prev(cur);return(lb?'<label>'+lb+'</label>':'')+'<div class="ph">'+(u?'<img src="'+u+'" alt="">':'<span>لا توجد صورة</span>')+'<label class="btn sm" style="margin:0;color:#0F2A44;font-weight:400">رفع صورة<input type="file" accept="image/*" hidden data-a="file" data-k="'+esc(key)+'"></label>'+(u?'<button class="sm" data-a="clr" data-v="'+esc(key)+'">حذف الصورة</button>':'')+'</div>'}
-function card(id,title,body){return'<details class="it" '+(ui.open==id?'open':'')+'><summary>'+esc(title)+'</summary><div class="ib">'+body+'</div></details>'}
-function mp(m,s){S[m][s]=S[m][s]||L4();return m+'.'+s+'.'+ui.l}
-function pv(a){return a&&a[ui.l]||''}
-function o(k,i,f,l){return[k,i,f,l].join('|')}
-function bar(txt,a,v){return'<div class="row" style="margin:6px 0 12px"><button class="pri" data-a="'+a+'"'+(v?' data-v="'+v+'"':'')+'>'+txt+'</button><span class="mu">اضغط على أي عنصر لفتح تفاصيله وتعديلها. اللغة الحالية: '+LB[ui.l]+'</span></div>'}
-function keyf(list){return list.map(function(x){var v=T[x[0]]&&T[x[0]][ui.l];return typeof v=='string'?fld('tx',x[0]+'|'+ui.l,v,x[1],T[x[0]][0]):''}).join('')}
-function seed(){var P=function(a,l){return a&&(a[l]||a[0])||''},m=function(f){return[0,1,2,3].map(f)};
-S.sl=[{im:'',k:m(function(){return'derma focus · 2027'}),h:m(function(l){return P(T.wlT,l)}),x:m(function(l){return P(T.wlX,l)}),bt:m(function(l){return P(T.nT,l)}),bl:'/news'},
-{im:'ph:1',k:m(function(l){return P(T.newk,l)}),h:m(function(l){return P(N[1][3],l)}),x:m(function(l){return P(N[1][4],l)}),bt:m(function(l){return P(T.read,l)}),bl:'/news/'+N[1][0]},
-{im:'ph:2',k:m(function(l){return P(T.newk,l)}),h:m(function(l){return P(N[2][3],l)}),x:m(function(l){return P(N[2][4],l)}),bt:m(function(l){return P(T.read,l)}),bl:'/news/'+N[2][0]},
-{im:'ph:3',k:m(function(l){return P(T.eT,l)}),h:m(function(l){return P(E[0][3],l)}),x:m(function(l){return P(E[0][1],l)+' '+P(E[0][2],l)+' · '+P(E[0][4],l)}),bt:m(function(l){return P(T.eT,l)}),bl:'/events/'+E[0][0]}]}
-function vHome(){var h=vHO()+'<h2>البنر الرئيسي (السلايدر)</h2>';
-if(!S.sl.length)return h+'<div class="box"><p class="mu">السلايدر الحالي هو الافتراضي. اضغط لتحميله في اللوحة ثم عدّل صوره ونصوصه وأضف سلايدات جديدة.</p><button class="pri" data-a="seed">تحميل السلايدر للتعديل</button></div>'+vHT();
-h+=bar('+ إضافة سلايد','addsl');
-S.sl.forEach(function(s,i){var b='sl.'+i;
-h+=card('s'+i,'سلايد '+(i+1)+' — '+(pv(s.h)||s.h[0]||''),imgc(b+'.im',s.im,'صورة الخلفية (اختيارية)')+fld('p',b+'.k.'+ui.l,pv(s.k),'العنوان الصغير (فوق العنوان)',s.k[0])+fld('p',b+'.h.'+ui.l,pv(s.h),'النص الرئيسي',s.h[0])+fld('p',b+'.x.'+ui.l,pv(s.x),'النص الفرعي',s.x[0],1)+fld('p',b+'.bt.'+ui.l,pv(s.bt),'نص الزر (اتركه فارغاً لإخفاء الزر)',s.bt[0])+fld('p',b+'.bl',s.bl,'رابط الزر (مثل /news أو /doctors)')+'<div class="row"><button class="sm" data-a="mv" data-v="sl.'+i+'.-1">▲ للأعلى</button><button class="sm" data-a="mv" data-v="sl.'+i+'.1">▼ للأسفل</button><button class="sm dg" data-a="del" data-v="sl.'+i+'">حذف السلايد</button></div>')});
-return h+vHT()}
-function vHT(){return'<h2>عناوين أقسام الصفحة الرئيسية</h2><div class="box">'+keyf([['iT','عنوان قسم المقابلات'],['dermaT','عنوان قسم المقالات'],['cT','عنوان قسم المراكز'],['mn','عنوان الشريط الجانبي للأخبار'],['all','نص رابط «عرض الكل»']])+'</div>'}
-function vNews(){var h=bar('+ إضافة خبر جديد','add','n');
-N.forEach(function(n,i){var s=n[0],nw=i>=F.BASE.n;
-h+=card('n'+i,pv(n[3])||n[3][0],imgc('im.n:'+s,S.im['n:'+s],'صورة الخبر')+fld('o',o('n',i,3,ui.l),pv(n[3]),'عنوان الخبر',n[3][0])+sel('o',o('n',i,1,''),SP.map(function(x,j){return[j,x[ui.l]||x[0]]}),n[1],'القسم')+fld('o',o('n',i,2,ui.l),pv(n[2]),'التاريخ',n[2][0])+fld('o',o('n',i,4,ui.l),pv(n[4]),'نص الخبر',n[4][0],1)+fld('p',mp('src',s),pv(S.src[s]),'المصدر (اسم الجهة أو الموقع)')+(nw?'<div class="row"><button class="sm dg" data-a="del" data-v="n.'+i+'">حذف الخبر</button></div>':''))});return h}
-function vArt(){var h=bar('+ إضافة مقال جديد','add','a');
-A.forEach(function(a,i){var s=a[0],nw=i>=F.BASE.a;if(!AD[i])AD[i]=L4();
-h+=card('a'+i,pv(a[1])||a[1][0],imgc('im.a:'+s,S.im['a:'+s],'صورة المقال')+fld('o',o('a',i,1,ui.l),pv(a[1]),'العنوان',a[1][0])+fld('p',mp('sub',s),pv(S.sub[s]),'العنوان الفرعي')+fld('p',mp('au',s),pv(S.au[s]),'كاتب المقال (اتركه فارغاً لاستخدام اسم الطبيب)',D[a[2]][1][ui.l]||D[a[2]][1][0])+fld('o',o('ad',i,'',ui.l),pv(AD[i]),'التاريخ',AD[i][0])+fld('o',o('a',i,3,ui.l),pv(a[3]),'نص المقال',a[3][0],1)+(nw?'<div class="row"><button class="sm dg" data-a="del" data-v="a.'+i+'">حذف المقال</button></div>':''))});return h}
-function vDoc(){var h='<div class="box"><b>إدارة التخصصات</b>'+SP.map(function(x,i){return fld('o',o('sp',i,'',ui.l),pv(x),'تخصص '+(i+1),x[0])}).join('')+'<div class="row"><button class="sm" data-a="add" data-v="sp">+ إضافة تخصص</button></div></div>'+bar('+ إضافة طبيب جديد','add','d');
-D.forEach(function(d,i){var s=d[0],nw=i>=F.BASE.d;
-h+=card('d'+i,pv(d[1])||d[1][0],imgc('im.d:'+s,S.im['d:'+s],'صورة الطبيب')+fld('o',o('d',i,1,ui.l),pv(d[1]),'اسم الطبيب',d[1][0])+sel('o',o('d',i,2,''),SP.map(function(x,j){return[j,x[ui.l]||x[0]]}),d[2],'التخصص')+sel('o',o('d',i,5,''),C.map(function(x,j){return[j,x[0]]}),d[5],'المدينة (للتصفية والبحث)')+fld('o',o('d',i,3,ui.l),pv(d[3]),'المدينة والدولة (كما تظهر)',d[3][0])+fld('o',o('d',i,4,ui.l),pv(d[4]),'نبذة عن الطبيب',d[4][0],1)+(nw?'<div class="row"><button class="sm dg" data-a="del" data-v="d.'+i+'">حذف الطبيب</button></div>':''))});return h}
-function vCli(){var h=bar('+ إضافة مركز جديد','add','c');
-CL.forEach(function(c,i){var nw=i>=F.BASE.c;
-h+=card('c'+i,c[0],imgc('im.c:'+c[3],S.im['c:'+c[3]],'شعار المركز')+fld('o',o('c',i,0,''),c[0],'اسم المركز (عربي)')+fld('o',o('c',i,1,''),c[1],'اسم المركز (لغات أخرى)')+sel('o',o('c',i,2,''),C.map(function(x,j){return[j,x[0]]}),c[2],'المدينة')+(nw?'<div class="row"><button class="sm dg" data-a="del" data-v="c.'+i+'">حذف المركز</button></div>':''))});return h}
-function vSoc(){var h='<div class="box"><p class="mu">اكتب اسم المستخدم أو الرابط الكامل. اترك الحقل فارغاً لإبقاء الأيقونة بدون رابط.</p>'+SOC.map(function(x){var v=S.so[x[0]]||'',u=F.url(x[0],v);return fld('p','so.'+x[0],v,x[0],x[0]=='Email'?'name@example.com':'username')+(u?'<span class="mu" dir="ltr">'+esc(u)+'</span>':'')}).join('')+'</div><h2>منصات إضافية</h2>'+bar('+ إضافة منصة','addsx');
-S.sx.forEach(function(x,i){h+='<div class="box">'+fld('p','sx.'+i+'.n',x.n,'اسم المنصة (مثل YouTube)')+fld('p','sx.'+i+'.u',x.u,'اسم المستخدم أو الرابط')+'<div class="row"><button class="sm dg" data-a="del" data-v="sx.'+i+'">حذف</button></div></div>'});return h}
-function vFoot(){var G=[['wT','about','editorial','disclaimer','ads'],['dT','nT','aT','iT','eT','cT'],['crT','submit','pT','contact'],['privacy','terms','unsub']];
-return'<h2>النصوص الأساسية</h2><div class="box">'+keyf([['brand','اسم الموقع'],['tag','الشعار النصي'],['fdesc','وصف الموقع'],['socn','ملاحظة أسفل أيقونات التواصل'],['fnl','عنوان النشرة البريدية'],['fnlx','نص النشرة'],['fe','نص حقل البريد'],['copy','نص الحقوق'],['ft','النص الختامي'],['top','نص زر «للأعلى»']])+'</div><h2>الأعمدة وروابطها</h2>'+G.map(function(g,i){return'<div class="box">'+keyf([['g'+(i+1),'عنوان العمود '+(i+1)]])+keyf(g.map(function(k){return['l_'+k,'رابط: '+((T[k]&&T[k][0])||k)]}))+'</div>'}).join('')}
-function vTx(){var q=ui.q.toLowerCase(),n=0,h='<input class="aq" data-a="q" placeholder="ابحث في كل نصوص الموقع ثم Enter" value="'+esc(ui.q)+'"><p class="mu" style="margin:8px 0">لغة التحرير: '+LB[ui.l]+'</p>';
-Object.keys(T).forEach(function(k){var v=T[k][ui.l];if(v==null||n>=80)return;var arr=Array.isArray(v);if(!(typeof v=='string'||(arr&&v.every(function(x){return typeof x=='string'}))))return;if(q&&(k+(arr?v.join(' '):v)).toLowerCase().indexOf(q)<0)return;n++;
-h+='<div class="box"><label>'+k+'</label>'+(arr?v.map(function(x,j){return fld('tx',k+'|'+ui.l+'|'+j,x)}).join(''):fld('tx',k+'|'+ui.l,v))+'</div>'});return h+(n>=80?'<p class="mu">عُرض أول 80 نتيجة، استخدم البحث.</p>':'')}
-var GSCRIPT="var KEY='CHANGE_ME';\nvar H={Doctors:['id','time','status','name','specialty','city','country','email','mobile','bio','photo_url'],Clinics:['id','time','status','name','country','city','email','phone','mgmt_mobile','website','message'],Partners:['id','time','status','name','email','message'],ImportDoctors:['name','specialty','city','country','bio','photo_url','mobile'],ImportClinics:['name','city','country','logo_url','mgmt_mobile']};\nvar TY={doctor:'Doctors',clinic:'Clinics',partner:'Partners'};\nfunction sheet(n){var ss=SpreadsheetApp.getActive(),s=ss.getSheetByName(n)||ss.insertSheet(n);if(s.getLastRow()==0)s.appendRow(H[n]);return s}\nfunction safe(v){v=String(v==null?'':v).slice(0,2000);return /^[=+\\-@]/.test(v)?\"'\"+v:v}\nfunction out(o){return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON)}\nfunction rows(n){var v=sheet(n).getDataRange().getValues(),h=v.shift();return v.filter(function(r){return r.join('')!==''}).map(function(r){var o={};h.forEach(function(k,i){o[k]=r[i]});return o})}\nfunction doPost(e){var b=JSON.parse(e.postData.contents);\nif(b.action=='submit'){var n=TY[b.type];if(!n)return out({ok:0});var d=b.data||{};sheet(n).appendRow([Utilities.getUuid().slice(0,8),new Date(),'pending'].concat(H[n].slice(3).map(function(k){return safe(d[k])})));return out({ok:1})}\nif(b.key!==KEY)return out({ok:0,err:'key'});\nif(b.action=='status'){var s=sheet(TY[b.type]),v=s.getDataRange().getValues();for(var i=1;i<v.length;i++)if(v[i][0]==b.id){s.getRange(i+1,3).setValue(b.status);return out({ok:1})}}\nreturn out({ok:0})}\nfunction doGet(e){var p=e.parameter;if(p.key!==KEY)return out({ok:0,err:'key'});\nif(p.action=='list')return out({ok:1,doctors:rows('Doctors'),clinics:rows('Clinics'),partners:rows('Partners')});\nif(p.action=='import')return out({ok:1,rows:rows(p.type=='clinics'?'ImportClinics':'ImportDoctors')});\nreturn out({ok:0})}";
-var T4={text:'نص',cards:'بطاقات',image:'صورة',banner:'شريط دعوة',sec:'قسم (صورة + عنوان + نص)'};
-function blCard(b,i){var p='bl.'+i,hm=b.pg=='home';
-return card('b'+i,T4[b.t]+' — '+(pv(b.ti)||b.ti[0]),(hm?'':'<div class="row">'+sel('p',p+'.pg',Object.keys(PGN).map(function(k){return[k,PGN[k]]}),b.pg)+sel('p',p+'.pos',[['top','أعلى الصفحة'],['bottom','أسفل الصفحة']],b.pos)+'<button class="sm" data-a="mv" data-v="bl.'+i+'.-1">▲</button><button class="sm" data-a="mv" data-v="bl.'+i+'.1">▼</button></div>')
-+((b.t=='sec'||b.t=='image')?imgc(p+'.img',b.img,'الصورة'):'')+fld('p',p+'.ti.'+ui.l,pv(b.ti),'العنوان',b.ti[0])+fld('p',p+'.bo.'+ui.l,pv(b.bo),'النص',b.bo[0],1)
-+((b.t=='banner'||b.t=='sec')?fld('p',p+'.lk',b.lk,'رابط الزر (اختياري، مثل #/doctors)')+fld('p',p+'.lt.'+ui.l,pv(b.lt),'نص الزر (اختياري)',b.lt[0]):'')
-+(b.t=='sec'?sel('p',p+'.side',[['start','الصورة في البداية'],['end','الصورة في النهاية']],b.side||'start','موضع الصورة'):'')
-+(b.t=='cards'?(b.cs||[]).map(function(c,j){var q=p+'.cs.'+j;return'<div class="box">'+imgc(q+'.img',c.img,'صورة البطاقة')+fld('p',q+'.ti.'+ui.l,pv(c.ti),'العنوان',c.ti[0])+fld('p',q+'.bo.'+ui.l,pv(c.bo),'الوصف',c.bo[0])+fld('p',q+'.lk',c.lk,'الرابط')+'<div class="row"><button class="sm dg" data-a="del" data-v="'+q+'">حذف البطاقة</button></div></div>'}).join('')+'<div class="row"><button class="sm" data-a="addcard" data-v="'+i+'">+ بطاقة</button></div>':'')+'<div class="row"><button class="sm dg" data-a="del" data-v="bl.'+i+'">حذف القسم</button></div>')}
-function vBl(){var h='<div class="row" style="margin-bottom:10px">'+Object.keys(T4).map(function(k){return'<button class="pri" data-a="addbl" data-v="'+k+'">+ '+T4[k]+'</button>'}).join('')+'</div><p class="mu">أقسام جديدة بنفس تصميم الموقع، اختر الصفحة ومكانها ورتّبها.</p>';
-S.bl.forEach(function(b,i){h+=blCard(b,i)});return h}
-var HN={banner:'البنر الرئيسي',news:'الأخبار والمقال المميز',interviews:'المقابلات',articles:'المقالات',clinics:'المراكز الطبية'};
-function vHO(){var ids=F.ho(),h='<h2>ترتيب وإظهار أقسام الصفحة الرئيسية</h2><div class="box">';
-ids.forEach(function(id){var b=S.bl.find(function(x){return x.id==id});h+='<div class="row" style="padding:6px 0;border-bottom:1px solid #eef2f6"><label style="margin:0;display:flex;gap:8px;align-items:center;flex:1;color:#0F2A44"><input type="checkbox" data-a="hv" data-v="'+id+'"'+(S.hh[id]?'':' checked')+' style="width:18px;height:18px;min-height:0"> '+esc(HN[id]||(b?pv(b.ti)||b.ti[0]:id))+(HN[id]?'':' <span class="mu">(قسم مضاف)</span>')+'</label><button class="sm" data-a="hm" data-v="'+id+'.-1">▲</button><button class="sm" data-a="hm" data-v="'+id+'.1">▼</button></div>'});
-h+='<div class="row" style="margin-top:10px"><button class="pri" data-a="addhs">+ إضافة قسم جديد (صورة + عنوان + نص)</button></div><p class="mu">الأقسام غير المعلّمة لا تظهر للزوار. الأقسام المضافة تُعدَّل بالأسفل.</p></div>';
-S.bl.forEach(function(b,i){if(b.pg=='home')h+=blCard(b,i)});return h}
-var RL={name:'الاسم',specialty:'التخصص',city:'المدينة',country:'الدولة',email:'البريد',mobile:'الجوال (للإدارة فقط)',mgmt_mobile:'جوال الإدارة (للإدارة فقط)',phone:'هاتف المركز',website:'الموقع',message:'الرسالة',bio:'النبذة',photo_url:'رابط الصورة'};
-function vReq(){var h='<div class="row" style="margin-bottom:10px"><button class="pri" data-a="reqload">تحديث الطلبات من Google Sheet</button><span class="mu">'+esc(ui.rmsg||'')+'</span></div>';
-if(!ui.reqs)return h+'<p class="mu">اضغط «تحديث» لجلب الطلبات. اربط الشيت أولاً من قسم «ربط Google Sheet». أرقام الجوال تظهر هنا فقط ولا تُنشر في الموقع.</p>';
-[['doctors','طلبات الأطباء'],['clinics','طلبات العيادات'],['partners','طلبات الشركاء']].forEach(function(g){var rs=(ui.reqs[g[0]]||[]).slice().sort(function(a,b){return(a.status=='pending'?0:1)-(b.status=='pending'?0:1)});h+='<h2>'+g[1]+' ('+rs.length+')</h2>';if(!rs.length)h+='<p class="mu">لا توجد طلبات.</p>';
-rs.forEach(function(r){var stt={pending:'قيد المراجعة',approved:'مقبول',rejected:'مرفوض'}[r.status]||r.status;h+=card('r'+r.id,(r.name||'—')+' — '+stt,Object.keys(r).filter(function(k){return k!='id'&&k!='status'&&r[k]!==''}).map(function(k){return'<div><span class="mu">'+(RL[k]||k)+'</span><div dir="auto">'+esc(r[k])+'</div></div>'}).join('')+(r.status=='pending'?'<div class="row"><button class="pri" data-a="reqok" data-v="'+g[0]+'.'+r.id+'">موافقة ونشر</button><button class="dg" data-a="reqno" data-v="'+g[0]+'.'+r.id+'">رفض</button></div>':''))})});return h}
-function vImp(){return'<div class="box"><b>رفع الأطباء أو العيادات دفعة واحدة من Google Sheet</b><p class="mu">أضف الصفوف في تبويب ImportDoctors أو ImportClinics داخل الشيت (الأعمدة في قسم «ربط Google Sheet») ثم اضغط جلب.</p><div class="row"><button class="pri" data-a="impload" data-v="doctors">جلب الأطباء</button><button class="pri" data-a="impload" data-v="clinics">جلب العيادات</button></div><p class="mu">'+esc(ui.imsg||'')+'</p></div>'+(ui.imp?'<div class="box"><b>تم العثور على '+ui.imp.rows.length+' صف</b>'+ui.imp.rows.slice(0,6).map(function(r){return'<div class="mu">'+esc(r.name||'')+' — '+esc(r.city||'')+'</div>'}).join('')+'<div class="row"><button class="pri" data-a="impgo">إضافة الكل للموقع</button></div></div>':'')}
-function vGs(){return'<div class="box"><b>1) الرابط والمفتاح</b>'+fld('p','gs.url',S.gs.url,'رابط Web App (ينتهي بـ /exec)')+fld('p','gs.key',S.gs.key,'مفتاح الإدارة (نفس قيمة KEY في السكربت)')+'<div class="row"><button data-a="gstest">اختبار الاتصال</button><span class="mu">'+esc(ui.gmsg||'')+'</span></div></div><div class="box"><b>2) خطوات الإعداد</b><ol class="mu" style="margin:0;padding-inline-start:20px"><li>أنشئ Google Sheet جديداً ثم افتح: الامتدادات ← Apps Script.</li><li>الصق الكود أدناه، وغيّر قيمة KEY إلى كلمة سرية طويلة.</li><li>نشر ← نشر كتطبيق ويب: التنفيذ باسمي، الوصول: أي شخص. انسخ الرابط هنا.</li><li>الأعمدة لتبويبي الاستيراد: ImportDoctors: name, specialty, city, country, bio, photo_url, mobile — ImportClinics: name, city, country, logo_url, mgmt_mobile.</li><li>بعد الموافقة على الطلبات صدّر «نسخة للنشر العام» من الإعدادات وارفعها.</li></ol></div><div class="box"><b>كود Apps Script</b><textarea readonly rows="14" dir="ltr" style="font-family:monospace;font-size:12px">'+esc(GSCRIPT)+'</textarea><div class="row"><button data-a="gscopy">نسخ الكود</button></div></div>'}
-function vSt(){return'<div class="box"><b>تغيير كلمة المرور</b><input id="np" type="password" placeholder="كلمة مرور جديدة (6 أحرف على الأقل)"><div class="row"><button class="pri" data-a="chpw">حفظ</button></div></div><div class="box"><b>نسخ احتياطي</b><div class="row"><button data-a="expj">تصدير البيانات JSON</button><label class="btn" style="margin:0;color:#0F2A44;font-weight:400">استيراد JSON<input type="file" accept=".json" hidden data-a="imp"></label></div></div><div class="box"><b>إصدار ملف الموقع</b><div class="row"><button class="pri" data-a="exph" data-v="pub">نسخة للنشر العام (بدون اللوحة)</button><button data-a="exph" data-v="ed">نسخة قابلة للتحرير (مع اللوحة)</button></div><p class="mu">التعديلات تُحفظ في هذا المتصفح فقط. لنشرها للزوار صدّر «نسخة للنشر العام» وارفعها على الاستضافة.</p></div><div class="box"><button class="dg" data-a="reset">حذف كل التعديلات والعودة للأصل</button></div>'}
-var VW={req:vReq,imp:vImp,gs:vGs,home:vHome,news:vNews,art:vArt,doc:vDoc,cli:vCli,soc:vSoc,foot:vFoot,bl:vBl,tx:vTx,st:vSt};
-function draw(){
-if(!ui.ok){el.innerHTML='<div class="al"><h2 style="margin:0">لوحة التحكم</h2><input id="pw" type="password" autocomplete="current-password" placeholder="كلمة المرور"><button class="pri" data-a="login" style="justify-content:center">دخول</button><p id="am" class="mu"></p><a href="#/">← العودة للموقع</a></div>';return}
-var cur=NAVS.find(function(x){return x[0]==ui.p});
-el.innerHTML='<div class="wrap"><aside class="sd"><div class="lg">derma focus</div>'+NAVS.map(function(x){return'<button data-a="nav" data-v="'+x[0]+'"'+(ui.p==x[0]?' class="on"':'')+'>'+x[1]+'</button>'}).join('')+'</aside><main class="mn"><div class="top"><h1>'+cur[1]+'</h1><label style="margin:0">لغة التحرير</label><select data-a="lang">'+LB.map(function(x,i){return'<option value="'+i+'"'+(i==ui.l?' selected':'')+'>'+x+'</option>'}).join('')+'</select><button data-a="view">عرض الموقع</button><button data-a="out">خروج</button></div><div class="ab">'+VW[ui.p]()+'</div></main></div>'}
-function route(){var on=/^#\/admin/.test(location.hash);el.style.display=on?'block':'none';document.documentElement.style.overflow=on?'hidden':'';if(on)draw()}
-function sp(o,p,v){var a=p.split('.');for(var i=0;i<a.length-1;i++)o=o[a[i]];o[a[a.length-1]]=v}
-function sv(){clearTimeout(tm);tm=setTimeout(svNow,350)}
-function svNow(){clearTimeout(tm);try{localStorage.setItem(F.K,JSON.stringify(S))}catch(e){alert('المساحة ممتلئة: احذف بعض الصور أو صدّر نسخة احتياطية')}}
-function setv(s,k,v){if(s=='tx'){var p=k.split('|');S.tx[k]=v;if(p.length==2)T[p[0]][p[1]]=v;else T[p[0]][p[1]][p[2]]=v}
-else if(s=='o'){var q=k.split('|'),kk=q[0],i=+q[1];F.setO(kk,i,q[2]===''?'':+q[2],q[3]===''?'':+q[3],v);if(i<F.BASE[kk=='ad'?'a':kk])S.ov[k]=v}
-else sp(S,k,v);sv()}
-function shr(f,mx,cb){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var s=Math.min(1,mx/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',.82))};im.src=r.result};r.readAsDataURL(f)}
-function dl(n,t,m){var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:m}));a.download=n;a.click()}
-function exph(pub){var c=document.documentElement.cloneNode(true),d=JSON.parse(JSON.stringify(S));['app','fo','tab','nl','lg','br'].forEach(function(i){var x=c.querySelector('#'+i);if(x)x.innerHTML=''});c.removeAttribute('data-theme');c.removeAttribute('style');
-var a=c.querySelector('#adm'),j=c.querySelector('#adm-js');if(a)a.remove();if(pub){if(j)j.remove();delete d.pw;if(d.gs)delete d.gs.key}
-c.querySelector('#site-data').textContent=JSON.stringify(d).replace(/</g,'\\u003c');dl('derma_focus.html','<!DOCTYPE html>\n'+c.outerHTML,'text/html')}
-function gs(params,body){var u=S.gs.url;if(!u)return Promise.reject('url');if(body)return fetch(u,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({key:S.gs.key},body))}).then(function(r){return r.json()});return fetch(u+'?'+new URLSearchParams(Object.assign({key:S.gs.key},params))).then(function(r){return r.json()})}
-function spI(n){n=String(n||'').trim();var k=SP.findIndex(function(x){return x.some(function(y){return String(y).toLowerCase()==n.toLowerCase()})});if(k<0){var r=[n||'—',n||'—',n||'—',n||'—'];S.add.sp.push(r);SP.push(r);k=SP.length-1}return k}
-function cI(n){n=String(n||'').trim().toLowerCase();return Math.max(0,C.findIndex(function(x){return x.some(function(y){return String(y).toLowerCase()==n})}))}
-function uu(u){return/^https?:\/\//i.test(u||'')?u:''}
-function mkDoc(r){var nm=String(r.name||'').trim();if(!nm||D.some(function(d){return d[1][0]==nm}))return 0;var ci=cI(r.city),tx=[r.city,r.country].filter(Boolean).join('، ')||C[ci][0],b=String(r.bio||''),rec=['dr-'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),[nm,nm,nm,nm],spI(r.specialty),[tx,tx,tx,tx],[b,b,b,b],ci];S.add.d.push(rec);D.push(rec);if(uu(r.photo_url))S.im['d:'+rec[0]]=r.photo_url;return 1}
-function mkCli(r){var nm=String(r.name||'').trim();if(!nm||CL.some(function(c){return c[0]==nm}))return 0;var mx=Math.max.apply(null,CL.map(function(c){return+c[3]})),rec=[nm,nm,cI(r.city),String(mx+1).padStart(2,'0')];S.add.c.push(rec);CL.push(rec);if(uu(r.logo_url))S.im['c:'+rec[3]]=r.logo_url;return 1}
-function rebuildAP(){AP.length=0;A.forEach(function(a,i){AP.push(1000+i)})}
-function login(){if(F.H(document.getElementById('pw').value)==S.pw){ui.ok=1;sessionStorage.setItem('dfa','1');draw()}else document.getElementById('am').textContent='كلمة المرور غير صحيحة'}
-el.addEventListener('input',function(e){var d=e.target.dataset;if(d.s&&e.target.tagName!='SELECT')setv(d.s,d.k,e.target.value)});
-el.addEventListener('change',function(e){var t=e.target,d=t.dataset;
-if(d.s&&t.tagName=='SELECT'){setv(d.s,d.k,t.value);return}
-if(d.a=='hv'){S.hh[d.v]=t.checked?0:1;svNow();return}
-if(d.a=='q'){ui.q=t.value;draw();return}
-if(d.a=='lang'){ui.l=+t.value;draw();return}
-if(d.a=='file'&&t.files[0]){shr(t.files[0],/^sl\./.test(d.k)?1600:720,function(u){if(d.k.indexOf('im.')==0)S.im[d.k.slice(3)]=u;else sp(S,d.k,u);svNow();draw()})}
-if(d.a=='imp'&&t.files[0]){var r=new FileReader();r.onload=function(){try{var x=JSON.parse(r.result);Object.keys(S).forEach(function(k){delete S[k]});Object.assign(S,x);S.pw=S.pw||F.H('admin123');svNow();location.reload()}catch(z){alert('ملف غير صالح')}};r.readAsText(t.files[0])}});
-el.addEventListener('keydown',function(e){if(e.key=='Enter'&&e.target.id=='pw')login()});
-el.addEventListener('click',function(e){var b=e.target.closest('[data-a]');if(!b||b.tagName=='INPUT'||b.tagName=='SELECT')return;var a=b.dataset.a,v=b.dataset.v,ts=Date.now().toString(36);
-if(a=='login')return login();
-if(a=='nav'){ui.p=v;draw()}
-else if(a=='out'){ui.ok=0;sessionStorage.removeItem('dfa');draw()}
-else if(a=='view'){svNow();location.hash='#/';location.reload()}
-else if(a=='seed'){seed();svNow();draw()}
-else if(a=='addsl'){S.sl.push({im:'',k:L4('عنوان صغير'),h:L4('النص الرئيسي'),x:L4('النص الفرعي'),bt:L4('اعرف المزيد'),bl:'/news'});ui.open='s'+(S.sl.length-1);svNow();draw()}
-else if(a=='add'){var r;
-if(v=='n'){r=['n-'+ts,0,L4('اليوم'),L4('عنوان الخبر الجديد'),L4('نص الخبر')];S.add.n.push(r);N.push(r);ui.open='n'+(N.length-1)}
-else if(v=='a'){r=['a-'+ts,L4('عنوان المقال'),0,L4('نص المقال'),L4('التاريخ')];S.add.a.push(r);A.push(r);AD.push(r[4]);rebuildAP();ui.open='a'+(A.length-1)}
-else if(v=='d'){r=['dr-'+ts,L4('د. اسم الطبيب'),0,C[0].slice(),L4('نبذة عن الطبيب'),0];S.add.d.push(r);D.push(r);ui.open='d'+(D.length-1)}
-else if(v=='c'){var mx=Math.max.apply(null,CL.map(function(c){return+c[3]}));r=['اسم المركز','Center name',0,String(mx+1).padStart(2,'0')];S.add.c.push(r);CL.push(r);ui.open='c'+(CL.length-1)}
-else if(v=='sp'){r=L4('تخصص جديد');S.add.sp.push(r);SP.push(r)}
-svNow();draw()}
-else if(a=='del'){if(!confirm('تأكيد الحذف؟'))return;var p=v.split('.'),k=p[0],i=+p[1];
-if(k=='sl'||k=='sx'||k=='bl')S[k].splice(i,1);
-else if(k=='bl2'){}
-else if(k=='n'||k=='a'||k=='d'||k=='c'){var arr={n:N,a:A,d:D,c:CL}[k],rec=arr[i];S.add[k]=S.add[k].filter(function(x){return x!==rec});arr.splice(i,1);if(k=='a'){AD.splice(i,1);rebuildAP()}}
-else sp0(p);
-svNow();draw()}
-else if(a=='clr'){if(v.indexOf('im.')==0)delete S.im[v.slice(3)];else sp(S,v,'');svNow();draw()}
-else if(a=='mv'){var q=v.split('.'),dir=+q.pop(),i2=+q[1],j=i2+dir,ar=S[q[0]];if(j>=0&&j<ar.length){var t=ar[i2];ar[i2]=ar[j];ar[j]=t;ui.open='';svNow();draw()}}
-else if(a=='hm'){var q2=v.split('.'),dr=+q2.pop(),id2=q2.join('.'),ids=F.ho(),k=ids.indexOf(id2),k2=k+dr;if(k2>=0&&k2<ids.length){var tmp=ids[k];ids[k]=ids[k2];ids[k2]=tmp;S.ho=ids;svNow();draw()}}
-else if(a=='addhs'){var bid='b'+ts;S.bl.push({id:bid,t:'sec',pg:'home',pos:'bottom',side:'start',ti:L4('عنوان القسم'),bo:L4('نص القسم'),lk:'#/',lt:L4(''),cs:[]});F.ho();ui.open='b'+(S.bl.length-1);svNow();draw()}
-else if(a=='reqload'){ui.rmsg='جارٍ التحميل...';draw();gs({action:'list'}).then(function(j){if(!j.ok)throw 0;ui.reqs=j;ui.rmsg='تم التحديث';draw()}).catch(function(){ui.rmsg='تعذر الجلب: تحقق من الرابط والمفتاح من قسم الربط';draw()})}
-else if(a=='reqok'||a=='reqno'){var q3=v.split('.'),g3=q3[0],rid=q3[1],row=(ui.reqs[g3]||[]).find(function(x){return x.id==rid});if(!row)return;
-if(a=='reqok'){var okk=g3=='doctors'?mkDoc(row):g3=='clinics'?mkCli(row):(row.name?(S.pt.push({n:String(row.name)}),1):0);if(!okk){ui.rmsg='تعذرت الإضافة (اسم مكرر أو فارغ)';draw();return}}
-var stt=a=='reqok'?'approved':'rejected';row.status=stt;svNow();draw();gs(null,{action:'status',type:{doctors:'doctor',clinics:'clinic',partners:'partner'}[g3],id:rid,status:stt}).catch(function(){ui.rmsg='تم محلياً، تعذر تحديث الحالة في الشيت';draw()})}
-else if(a=='impload'){ui.imsg='جارٍ الجلب...';ui.imp=null;draw();gs({action:'import',type:v}).then(function(j){if(!j.ok)throw 0;ui.imp={type:v,rows:j.rows||[]};ui.imsg='';draw()}).catch(function(){ui.imsg='تعذر الجلب: تحقق من الرابط والمفتاح';draw()})}
-else if(a=='impgo'){var n2=0;ui.imp.rows.forEach(function(r){n2+=ui.imp.type=='clinics'?mkCli(r):mkDoc(r)});ui.imsg='تمت إضافة '+n2+' من '+ui.imp.rows.length+' (المكرر يُتجاهل)';ui.imp=null;svNow();draw()}
-else if(a=='gstest'){ui.gmsg='جارٍ الاختبار...';draw();gs({action:'list'}).then(function(j){ui.gmsg=j.ok?'الاتصال سليم ✓':'المفتاح غير صحيح';draw()}).catch(function(){ui.gmsg='تعذر الاتصال بالرابط';draw()})}
-else if(a=='gscopy'){navigator.clipboard.writeText(GSCRIPT).then(function(){alert('تم النسخ')})}
-else if(a=='addsx'){S.sx.push({n:'',u:''});svNow();draw()}
-else if(a=='addbl'){S.bl.push({id:'b'+ts,t:v,pg:'home',pos:'bottom',ti:L4('عنوان جديد'),bo:L4(''),lk:'#/',lt:L4('اعرف المزيد'),cs:v=='cards'?[0,1,2].map(function(){return{ti:L4('عنوان البطاقة'),bo:L4('وصف مختصر'),lk:'#/'}}):[]});ui.open='b'+(S.bl.length-1);svNow();draw()}
-else if(a=='addcard'){S.bl[+v].cs.push({ti:L4('عنوان البطاقة'),bo:L4('وصف مختصر'),lk:'#/'});ui.open='b'+v;svNow();draw()}
-else if(a=='chpw'){var n=document.getElementById('np').value;if(n.length<6)return alert('6 أحرف على الأقل');S.pw=F.H(n);svNow();alert('تم تغيير كلمة المرور')}
-else if(a=='expj'){var dd=JSON.parse(JSON.stringify(S));dl('derma_focus_data.json',JSON.stringify(dd),'application/json')}
-else if(a=='exph')exph(v=='pub')
-else if(a=='reset'){if(confirm('سيتم حذف كل التعديلات نهائياً. متابعة؟')){localStorage.removeItem(F.K);location.hash='#/';location.reload()}}});
-function sp0(p){var o=S;for(var i=0;i<p.length-1;i++)o=o[p[i]];if(Array.isArray(o))o.splice(+p[p.length-1],1)}
-addEventListener('hashchange',route);route();
-})();
-</script>
+
 </body></html>
